@@ -5,7 +5,8 @@ public class MyInterpreter {
 	public static SExpression myInterpreter(SExpression exp, SExpression d) {
 		Dlist = d;
 		try{
-			ScannerParse.printSExpression(eval(exp, new SExpression("Atom", new Token("NIL","Atom")), d));
+			//ScannerParse.printSExpression(eval(exp, new SExpression("Atom", new Token("NIL","Atom")), d));
+			ScannerParse.printOutput(eval(exp, new SExpression("Atom", new Token("NIL","Atom")), d));
 			return Dlist;
 		}
 		catch(Exception e){

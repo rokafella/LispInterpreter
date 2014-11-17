@@ -43,10 +43,10 @@ public class ScannerParse {
 		int i = 0;
 		
 		while(i<allSExpression.size()){
-			System.out.print("SExpression "+(i+1)+": ");
-			printSExpression(allSExpression.get(i));
-			System.out.println(" ");
-			System.out.print("Interpreter "+(i+1)+": ");
+			//System.out.print("SExpression "+(i+1)+": ");
+			//printSExpression(allSExpression.get(i));
+			//System.out.println(" ");
+			//System.out.print("Interpreter "+(i+1)+": ");
 			d = MyInterpreter.myInterpreter(allSExpression.get(i),d);
 			//printSExpression(MyInterpreter.cons(allSExpression.get(0),allSExpression.get(1)));
 			//printSExpression(MyInterpreter.cdr(allSExpression.get(i)));
@@ -56,7 +56,6 @@ public class ScannerParse {
 	}
 	
 	public static void printSExpression(SExpression s) {
-		
 		if(s.child.getClass() == Token.class){
 			System.out.print(((Token) s.child).getVal());
 		}
@@ -70,7 +69,44 @@ public class ScannerParse {
 		}
 	}
 	
-	static Boolean checkRightForNil(SExpression s){
+	public static void printOutput(SExpression s){
+		if(s.child.getClass() == Token.class){
+			System.out.print(((Token) s.child).getVal());
+		}
+		else{
+			if(checkRightForNil(((CSExpression)s.child).right)){
+				CSExpression cs = (CSExpression) s.child;
+				System.out.print("(");
+				printOutput(cs.left);
+				printList(cs.right);
+				System.out.print(")");
+			}
+			else{
+				System.out.print("(");
+				CSExpression cs = (CSExpression) s.child;
+				printOutput(cs.left);
+				System.out.print(" . ");
+				printOutput(cs.right);
+				System.out.print(")");
+			}
+		}
+	}
+	
+	private static void printList(SExpression s){
+		if(s.child.getClass() == Token.class){
+			if(!((Token) s.child).getVal().equals("NIL")){
+				System.out.print(" "+((Token) s.child).getVal());
+			}
+		}
+		else{
+			CSExpression cs = (CSExpression) s.child;
+			System.out.print(" ");
+			printOutput(cs.left);
+			printList(cs.right);
+		}
+	}
+	
+	private static Boolean checkRightForNil(SExpression s){
 		if(s.child.getClass() == Token.class){
 			if(((Token) s.child).getVal().equals("NIL")){
 				return true;
@@ -80,7 +116,7 @@ public class ScannerParse {
 			}
 		}
 		else{
-			return false;
+			return checkRightForNil(((CSExpression)s.child).right);
 		}
 	}
 
@@ -127,7 +163,7 @@ public class ScannerParse {
 				     					scanner(temp.substring(1));
 					         		}
 					         		else
-					         		allTokens.add(new Token("Error at parsing, '"+token[1]+"' cannot be after Dot.","Error"));
+					         		allTokens.add(new Token("ERROR: Parsing failed, '"+token[1]+"' cannot be after Dot.","Error"));
 					         		//System.out.print("<-- Error at parsing, '"+token[1]+"' cannot be after Dot.");
 			     				}
 								break;
@@ -167,7 +203,7 @@ public class ScannerParse {
 	         						}
 		         					else{
 		         						//i=j-1;
-		         						allTokens.add(new Token("Error at parsing, '"+token[j]+"' cannot be a number.","Error"));
+		         						allTokens.add(new Token("ERROR: Parsing failed, '"+token[j]+"' cannot be a number.","Error"));
 		         						//System.out.print("<-- Error at parsing, '"+token[j]+"' cannot be a number.");
 		         						break;
 		         					}
@@ -201,7 +237,7 @@ public class ScannerParse {
 			         						sb2.append(token[j]);
 			         					}
 			         					else{
-			         						allTokens.add(new Token("Error at parsing, '"+token[j]+"' cannot be a literal.","Error"));
+			         						allTokens.add(new Token("ERROR: Parsing failed, '"+token[j]+"' cannot be a literal.","Error"));
 			         						//System.out.print("<-- Error at parsing, '"+token[j]+"' cannot be a literal.");
 			         						break;
 			         					}
@@ -212,7 +248,7 @@ public class ScannerParse {
 					         		//System.out.print('\n');
 		         				}
 		         				else{
-		         					allTokens.add(new Token("Interpreter failed at Scanner: '"+token[1]+"' is not valid.","Error"));
+		         					allTokens.add(new Token("ERROR: Interpreter failed at Scanner: '"+token[1]+"' is not valid.","Error"));
 		         					//System.out.print("<-- Interpreter failed at Scanner: '"+token[1]+"' is not valid.");
 		         				}
 		         				break;
@@ -297,7 +333,7 @@ public class ScannerParse {
 				top = stack.pop();
 			}
 			catch(Exception e){
-				System.out.println("Grammar Failed");
+				System.out.println("ERROR: Expression do not match the grammar");
 				Error = true;
 				//top = null;
 				return;
@@ -332,7 +368,7 @@ public class ScannerParse {
 			}
 			else if(top.getType()=="Atom"||top.getType()=="Dot"||top.getType()=="LeftParan"||top.getType()=="RightParan"){
 				if(!top.getVal().equals(token.getVal())){
-					System.out.println("GRAMMAR Failed wrong Terminal");
+					System.out.println("ERROR: GRAMMAR Failed wrong Terminal");
 					Error = true;
 					//return false;
 					break;
@@ -347,12 +383,12 @@ public class ScannerParse {
 		}
 		//System.out.println(top.getVal());
 		if(top.getType()=="$"){
-			System.out.println("Grammar Accepted");
+			//System.out.println("Grammar Accepted");
 			addTreeToList();
 			//return true;
 		}
 		else{
-			System.out.println("Grammar Rejected");
+			System.out.println("ERROR: Expression do not satisfy the grammar");
 			Error = true;
 		}
 		
@@ -395,7 +431,7 @@ public class ScannerParse {
 			String rule = table[row][col];
 			
 			if(rule==null){
-				System.out.println("No rule found");
+				System.out.println("ERROR: No grammar rule found for given expression");
 			}
 		
 			return rule;
@@ -404,7 +440,7 @@ public class ScannerParse {
 			if(token.getType()=="Error")
 				System.out.println(token.getVal());
 			else
-				System.out.println(token.getType()+" rule not found");
+				System.out.println("ERROR: "+token.getType()+" rule not found");
 			return null;
 		}
 	}
@@ -500,8 +536,7 @@ public class ScannerParse {
 					lastNode = new SExpression("Atom",new Token("NIL","Atom"));
 				}
 			}
-			
-			if(currentTree!= null && currentTree.right == null && ExtraParan == 0){
+			else if(currentTree!= null && currentTree.right == null && ExtraParan == 0){
 				currentTree.right = new SExpression("Atom", new Token("NIL","Atom"));
 			}
 	
