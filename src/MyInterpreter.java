@@ -29,7 +29,7 @@ public class MyInterpreter {
 				return getval(exp,a);
 			}
 			else{
-				throw new Exception("Broken at eval, unbound variable: "+((Token)exp.child).getVal());
+				throw new Exception("ERROR: Broken at eval, unbound variable: "+((Token)exp.child).getVal());
 			}
 		}
 		else{
@@ -58,7 +58,7 @@ public class MyInterpreter {
 
 	private static SExpression evcon(SExpression x, SExpression a, SExpression d) throws Exception {
 		if(isNull(x)){
-			throw new Exception("Broken at eval, No condition matched evcon");
+			throw new Exception("ERROR: Broken at eval, No condition matched evcon");
 		}
 		else if(isTrue(eval(car(car(x)),a,d))){
 			return eval(car(cdr(car(x))),a,d);
@@ -89,7 +89,7 @@ public class MyInterpreter {
 					}
 				}
 				else{
-					throw new Exception("Broken at apply, Atom is a unary function");
+					throw new Exception("ERROR: Broken at apply, Atom is a unary function");
 				}
 			}
 			else if(((Token)f.child).getVal().equals("EQ")){
@@ -102,7 +102,7 @@ public class MyInterpreter {
 					}
 				}
 				else{
-					throw new Exception("Broken at apply, EQ is a binary function");
+					throw new Exception("ERROR: Broken at apply, EQ is a binary function");
 				}
 			}
 			else if(((Token)f.child).getVal().equals("INT")){
@@ -115,7 +115,7 @@ public class MyInterpreter {
 					}
 				}
 				else{
-					throw new Exception("Broken at apply, INT is a unary function");
+					throw new Exception("ERROR: Broken at apply, INT is a unary function");
 				}
 			}
 			else if(((Token)f.child).getVal().equals("NULL")){
@@ -128,7 +128,7 @@ public class MyInterpreter {
 					}
 				}
 				else{
-					throw new Exception("Broken at apply, NULL is a unary function");
+					throw new Exception("ERROR: Broken at apply, NULL is a unary function");
 				}
 			}
 			else if(((Token)f.child).getVal().equals("PLUS")){
@@ -136,7 +136,7 @@ public class MyInterpreter {
 					return plus(car(x),car(cdr(x)));
 				}
 				else{
-					throw new Exception("Broken at apply, Plus is a binary function");
+					throw new Exception("ERROR: Broken at apply, Plus is a binary function");
 				}
 			}
 			else if(((Token)f.child).getVal().equals("MINUS")){
@@ -144,7 +144,7 @@ public class MyInterpreter {
 					return minus(car(x),car(cdr(x)));
 				}
 				else{
-					throw new Exception("Broken at apply, Minus is a binary function");
+					throw new Exception("ERROR: Broken at apply, Minus is a binary function");
 				}
 			}
 			else if(((Token)f.child).getVal().equals("TIMES")){
@@ -152,7 +152,7 @@ public class MyInterpreter {
 					return times(car(x),car(cdr(x)));
 				}
 				else{
-					throw new Exception("Broken at apply, Times is a binary function");
+					throw new Exception("ERROR: Broken at apply, Times is a binary function");
 				}
 			}
 			else if(((Token)f.child).getVal().equals("QUOTIENT")){
@@ -160,7 +160,7 @@ public class MyInterpreter {
 					return quotient(car(x),car(cdr(x)));
 				}
 				else{
-					throw new Exception("Broken at apply, Quotient is a binary function");
+					throw new Exception("ERROR: Broken at apply, Quotient is a binary function");
 				}
 			}
 			else if(((Token)f.child).getVal().equals("REMAINDER")){
@@ -168,7 +168,7 @@ public class MyInterpreter {
 					return remainder(car(x),car(cdr(x)));
 				}
 				else{
-					throw new Exception("Broken at apply, Remainder is a binary function");
+					throw new Exception("ERROR: Broken at apply, Remainder is a binary function");
 				}
 			}
 			else if(((Token)f.child).getVal().equals("LESS")){
@@ -176,7 +176,7 @@ public class MyInterpreter {
 					return less(car(x),car(cdr(x)));
 				}
 				else{
-					throw new Exception("Broken at apply, Less is a binary function");
+					throw new Exception("ERROR: Broken at apply, Less is a binary function");
 				}
 			}
 			else if(((Token)f.child).getVal().equals("GREATER")){
@@ -184,7 +184,7 @@ public class MyInterpreter {
 					return greater(car(x),car(cdr(x)));
 				}
 				else{
-					throw new Exception("Broken at apply, Greater is a binary function");
+					throw new Exception("ERROR: Broken at apply, Greater is a binary function");
 				}
 			}
 			else{
@@ -192,12 +192,12 @@ public class MyInterpreter {
 					return eval(cdr(getval(f,d)), addpairs(car(getval(f,d)),x,a), d);
 				}
 				else{
-					throw new Exception("Broken at apply, function: "+((Token)f.child).getVal()+" not defined");
+					throw new Exception("ERROR: Broken at apply, function: "+((Token)f.child).getVal()+" not defined");
 				}
 			}
 		}
 		else{
-			throw new Exception("Broken at apply, function should be an atom");
+			throw new Exception("ERROR: Broken at apply, function should be an atom");
 		}
 	}
 	
@@ -243,7 +243,7 @@ public class MyInterpreter {
 			}
 		}
 		else{
-			throw new Exception("Broken at eval, only integers can be compared");
+			throw new Exception("ERROR: Broken at eval, only integers can be compared");
 		}
 	}
 	
@@ -257,7 +257,7 @@ public class MyInterpreter {
 			}
 		}
 		else{
-			throw new Exception("Broken at eval, only integers can be compared");
+			throw new Exception("ERROR: Broken at eval, only integers can be compared");
 		}
 	}
 
@@ -267,7 +267,7 @@ public class MyInterpreter {
 			return new SExpression("Atom", new Token(String.valueOf(result),"Atom"));
 		}
 		else{
-			throw new Exception("Broken at eval, only integers can be divided");
+			throw new Exception("ERROR: Broken at eval, only integers can be divided");
 		}
 	}
 	
@@ -277,7 +277,7 @@ public class MyInterpreter {
 			return new SExpression("Atom", new Token(String.valueOf(result),"Atom"));
 		}
 		else{
-			throw new Exception("Broken at eval, only integers can be divided");
+			throw new Exception("ERROR: Broken at eval, only integers can be divided");
 		}
 	}
 	
@@ -287,7 +287,7 @@ public class MyInterpreter {
 			return new SExpression("Atom", new Token(String.valueOf(result),"Atom"));
 		}
 		else{
-			throw new Exception("Broken at eval, only integers can be multiplied");
+			throw new Exception("ERROR: Broken at eval, only integers can be multiplied");
 		}
 	}
 	
@@ -297,7 +297,7 @@ public class MyInterpreter {
 			return new SExpression("Atom", new Token(String.valueOf(result),"Atom"));
 		}
 		else{
-			throw new Exception("Broken at eval, only integers can be subtracted");
+			throw new Exception("ERROR: Broken at eval, only integers can be subtracted");
 		}
 	}
 	
@@ -307,7 +307,7 @@ public class MyInterpreter {
 			return new SExpression("Atom", new Token(String.valueOf(result),"Atom"));
 		}
 		else{
-			throw new Exception("Broken at eval, only integers can be added");
+			throw new Exception("ERROR: Broken at eval, only integers can be added");
 		}
 	}
 
@@ -370,7 +370,7 @@ public class MyInterpreter {
 			}
 		}
 		else{
-			throw new Exception("Car is undefined for atoms");
+			throw new Exception("ERROR: Car is undefined for atoms");
 		}
 	}
 	
@@ -385,7 +385,7 @@ public class MyInterpreter {
 			}
 		}
 		else{
-			throw new Exception("Cdr is undefined for atoms");
+			throw new Exception("ERROR: Cdr is undefined for atoms");
 		}
 	}
 	
