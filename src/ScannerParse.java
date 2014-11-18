@@ -336,6 +336,7 @@ public class ScannerParse {
 			}
 			catch(Exception e){
 				System.out.println("ERROR: Expression do not match the grammar");
+				System.exit(0);
 				Error = true;
 				//top = null;
 				return;
@@ -371,6 +372,7 @@ public class ScannerParse {
 			else if(top.getType()=="Atom"||top.getType()=="Dot"||top.getType()=="LeftParan"||top.getType()=="RightParan"){
 				if(!top.getVal().equals(token.getVal())){
 					System.out.println("ERROR: GRAMMAR Failed wrong Terminal");
+					System.exit(0);
 					Error = true;
 					//return false;
 					break;
@@ -391,6 +393,7 @@ public class ScannerParse {
 		}
 		else{
 			System.out.println("ERROR: Expression do not satisfy the grammar");
+			System.exit(0);
 			Error = true;
 		}
 		
@@ -434,15 +437,20 @@ public class ScannerParse {
 			
 			if(rule==null){
 				System.out.println("ERROR: No grammar rule found for given expression");
+				System.exit(0);
 			}
 		
 			return rule;
 		}
 		else{
-			if(token.getType()=="Error")
+			if(token.getType()=="Error"){
 				System.out.println(token.getVal());
-			else
+				System.exit(0);
+			}
+			else{
 				System.out.println("ERROR: "+token.getType()+" rule not found");
+				System.exit(0);
+			}
 			return null;
 		}
 	}

@@ -9,7 +9,6 @@ public class MyInterpreter {
 	public static SExpression myInterpreter(SExpression exp, SExpression d) {
 		Dlist = d;
 		try{
-			//ScannerParse.printSExpression(eval(exp, new SExpression("Atom", new Token("NIL","Atom")), d));
 			ScannerParse.printOutput(eval(exp, new SExpression("Atom", new Token("NIL","Atom")), d));
 			return Dlist;
 		}
@@ -40,7 +39,12 @@ public class MyInterpreter {
 		}
 		else{
 			if(((Token)car(exp).child).getVal().equals("QUOTE")){
-				return car(cdr(exp));
+				if(isNull(cdr(cdr(exp)))){
+					return car(cdr(exp));
+				}
+				else{
+					throw new Exception("ERROR: Broken at apply, QUOTE is a unary function");
+				}
 			}
 			else if(((Token)car(exp).child).getVal().equals("COND")){
 				return evcon(cdr(exp),a,d);
@@ -372,7 +376,7 @@ public class MyInterpreter {
 		}
 	}
 
-	private static boolean eq(SExpression x, SExpression y) {
+	private static boolean eq(SExpression x, SExpression y) throws Exception {
 		try{
 			if(((Token)x.child).getVal().equals(((Token)y.child).getVal())){
 				return true;
@@ -382,7 +386,7 @@ public class MyInterpreter {
 			}
 		}
 		catch (Exception e){
-			return false;
+			throw new Exception("ERROR: EQ can only compare atoms");
 		}
 	}
 
