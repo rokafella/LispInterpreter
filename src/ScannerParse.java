@@ -50,7 +50,7 @@ public class ScannerParse {
 			d = MyInterpreter.myInterpreter(allSExpression.get(i),d);
 			//printSExpression(MyInterpreter.cons(allSExpression.get(0),allSExpression.get(1)));
 			//printSExpression(MyInterpreter.cdr(allSExpression.get(i)));
-			System.out.println(" ");
+			System.out.println("");
 			i++;
 		}
 	}
@@ -70,24 +70,26 @@ public class ScannerParse {
 	}
 	
 	public static void printOutput(SExpression s){
-		if(s.child.getClass() == Token.class){
-			System.out.print(((Token) s.child).getVal());
-		}
-		else{
-			if(checkRightForNil(((CSExpression)s.child).right)){
-				CSExpression cs = (CSExpression) s.child;
-				System.out.print("(");
-				printOutput(cs.left);
-				printList(cs.right);
-				System.out.print(")");
+		if(s!=null){
+			if(s.child.getClass() == Token.class){
+				System.out.print(((Token) s.child).getVal());
 			}
 			else{
-				System.out.print("(");
-				CSExpression cs = (CSExpression) s.child;
-				printOutput(cs.left);
-				System.out.print(" . ");
-				printOutput(cs.right);
-				System.out.print(")");
+				if(checkRightForNil(((CSExpression)s.child).right)){
+					CSExpression cs = (CSExpression) s.child;
+					System.out.print("(");
+					printOutput(cs.left);
+					printList(cs.right);
+					System.out.print(")");
+				}
+				else{
+					System.out.print("(");
+					CSExpression cs = (CSExpression) s.child;
+					printOutput(cs.left);
+					System.out.print(" . ");
+					printOutput(cs.right);
+					System.out.print(")");
+				}
 			}
 		}
 	}
@@ -106,7 +108,7 @@ public class ScannerParse {
 		}
 	}
 	
-	private static Boolean checkRightForNil(SExpression s){
+	public static Boolean checkRightForNil(SExpression s){
 		if(s.child.getClass() == Token.class){
 			if(((Token) s.child).getVal().equals("NIL")){
 				return true;
@@ -248,7 +250,7 @@ public class ScannerParse {
 					         		//System.out.print('\n');
 		         				}
 		         				else{
-		         					allTokens.add(new Token("ERROR: Interpreter failed at Scanner: '"+token[1]+"' is not valid.","Error"));
+		         					allTokens.add(new Token("ERROR: Interpreter failed at Scanner: '"+token[0]+"' is not valid.","Error"));
 		         					//System.out.print("<-- Interpreter failed at Scanner: '"+token[1]+"' is not valid.");
 		         				}
 		         				break;

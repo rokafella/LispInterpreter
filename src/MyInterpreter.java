@@ -1,3 +1,7 @@
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 public class MyInterpreter {
 
 	public static SExpression Dlist;
@@ -11,6 +15,7 @@ public class MyInterpreter {
 		}
 		catch(Exception e){
 			System.out.print(e.getMessage());
+			System.exit(0);
 			return new SExpression("Atom", new Token("NIL","Atom"));
 		}
 	}
@@ -41,9 +46,14 @@ public class MyInterpreter {
 				return evcon(cdr(exp),a,d);
 			}
 			else if(((Token)car(exp).child).getVal().equals("DEFUN")){
-				d = addToDList(cdr(exp),d);
-				Dlist = d;
-				return car(cdr(exp));
+				if(checkDefun(cdr(exp))&&isNull(cdr(cdr(cdr(cdr(exp)))))){
+					d = addToDList(cdr(exp),d);
+					Dlist = d;
+					return car(cdr(exp));
+				}
+				else{
+					throw new Exception("ERROR: Broken at eval, DEFUN is invalid");
+				}
 			}
 			else {
 				return apply(car(exp),evlist(cdr(exp),a,d),a,d);
@@ -51,10 +61,60 @@ public class MyInterpreter {
 		}
 	}
 
+	private static boolean checkDefun(SExpression f) throws Exception {
+		String functionName = ((Token)((SExpression)car(f)).child).getVal();
+		if(!checkLiteral(functionName)){
+			throw new Exception("ERROR: Broken at eval, function name should be a literal atom");
+		}
+		else{
+			if(functionName.equals("COND")||functionName.equals("QUOTE")||functionName.equals("DEFUN")||functionName.equals("CONS")){
+				throw new Exception("ERROR: Broken at eval, function name cannot be "+functionName);
+			}
+			else{
+				if(!ScannerParse.checkRightForNil(car(cdr(f)))){
+					throw new Exception("ERROR: Broken at eval, function parameter list should be a list");
+				}
+				else{
+					Set<String> params = new HashSet<String>();
+					SExpression par = car(cdr(f));
+					while(!isNull(par)){
+						String s = getParams(car(par));
+						if(s==null||s.equals("T")||s.equals("NIL")||!checkLiteral(s)){
+							throw new Exception("ERROR: Broken at eval, invlaid function parameters");
+						}
+						if(!params.add(s)){
+							throw new Exception("ERROR: Broken at eval, function parameters should be different");
+						}
+						par = cdr(par);
+					}
+					return true;
+				}
+			}
+		}
+	}
+
+	private static String getParams(SExpression f) {
+		if(f.child.getClass() == Token.class){
+			return ((Token) f.child).getVal();
+		}
+		else{
+			return null;
+		}
+	}
+
+	private static boolean checkLiteral(String string) {
+		StringTokenizer st = new StringTokenizer(string);
+		char token[] = st.nextToken().toUpperCase().toCharArray();
+		if(!(token[0]>64 && token[0]<91)){
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+
 	private static SExpression addToDList(SExpression exp, SExpression d) throws Exception {
-		
 		return cons(cons(car(exp),cons(car(cdr(exp)),car(cdr(cdr(exp))))),d);
-		
 	}
 
 	private static SExpression evcon(SExpression x, SExpression a, SExpression d) throws Exception {
