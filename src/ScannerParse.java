@@ -16,6 +16,8 @@ public class ScannerParse {
 //		while(sc.hasNextLine()){
 //			scanner(sc.nextLine());
 //		}
+//		
+//		sc.close();
 		
 		try (BufferedReader br = new BufferedReader(new FileReader("input.txt")))
 		{

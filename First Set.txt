@@ -1,0 +1,24 @@
+//First Set
+
+F(S) = {atom, '('}
+F(E) = {atom, '('}
+F(X) = {atom, '(', ')'}
+F(Y) = {'.', atom, '(', ')'}
+F(R) = {atom, '(', 'ϵ'}
+
+//Follow Set
+
+FL(S) = {'$'}
+FL(E) = {'.', atom, '(', ')', '$'}
+FL(X) = {'.', atom, '(', ')', '$'}
+FL(Y) = {'.', atom, '(', ')', '$'}
+FL(R) = {')', '$'}
+
+
+//Parsing Table
+		.		atom		(		)		$
+S 				S->E		S->E
+E				E->atom		E->(X
+X				X->EY		X->EY	X->)
+Y	   Y->.E)   Y->R)		Y->R)   Y->R)
+R				R->ER		R->ER	R->ϵ	R->ϵ
